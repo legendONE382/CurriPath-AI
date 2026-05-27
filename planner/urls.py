@@ -1,8 +1,7 @@
 from django.urls import path
 
-from .views import home, generate_curriculum
+from .views import curriculum_view
 
 urlpatterns = [
-    path('', home, name='home'),
-    path('generate/', generate_curriculum, name='generate_curriculum'),
+    path('', curriculum_view, name='home'),
 ]

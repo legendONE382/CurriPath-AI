@@ -1,34 +1,60 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CurriPath AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 min-h-screen text-slate-800">
+    <main class="max-w-4xl mx-auto p-6 md:p-10">
+        <section class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+            <h1 class="text-3xl font-bold mb-2">CurriPath AI</h1>
+            <p class="text-slate-600 mb-6">Generate a professional curriculum and keep it in your browser session.</p>
 
-{% block title %}CurriPath Planner{% endblock %}
+            {% if error %}
+                <div class="mb-4 rounded-md bg-red-50 border border-red-200 text-red-700 px-4 py-3">{{ error }}</div>
+            {% endif %}
 
-{% block content %}
-<section class="bg-white shadow-lg rounded-2xl p-8">
-    <h1 class="text-3xl font-bold mb-2">CurriPath AI Planner</h1>
-    <p class="text-slate-600 mb-6">Generate a professional week-by-week curriculum in seconds.</p>
+            <form method="post" class="space-y-5">
+                {% csrf_token %}
+                <div>
+                    <label for="topic" class="block text-sm font-medium mb-1">Topic</label>
+                    <input id="topic" name="topic" type="text" required
+                           value="{{ form_data.topic|default:'' }}"
+                           class="w-full rounded-lg border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                           placeholder="e.g., Python for Data Science" />
+                </div>
 
-    <form method="post" action="{% url 'generate_curriculum' %}" class="space-y-5">
-        {% csrf_token %}
-        <div>
-            <label for="topic" class="block text-sm font-medium mb-1">Topic</label>
-            <input id="topic" name="topic" type="text" required class="w-full rounded-lg border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="e.g., Python for Data Science" />
-        </div>
+                <div>
+                    <label for="timeframe" class="block text-sm font-medium mb-1">Timeframe (weeks)</label>
+                    <input id="timeframe" name="timeframe" type="number" min="1" required
+                           value="{{ form_data.timeframe|default:'' }}"
+                           class="w-full rounded-lg border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                           placeholder="e.g., 8" />
+                </div>
 
-        <div>
-            <label for="timeframe" class="block text-sm font-medium mb-1">Timeframe (weeks)</label>
-            <input id="timeframe" name="timeframe" type="number" min="1" required class="w-full rounded-lg border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="e.g., 8" />
-        </div>
+                <div>
+                    <label for="level" class="block text-sm font-medium mb-1">Skill Level</label>
+                    <select id="level" name="level" required class="w-full rounded-lg border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="Beginner" {% if form_data.level == 'Beginner' %}selected{% endif %}>Beginner</option>
+                        <option value="Intermediate" {% if form_data.level == 'Intermediate' %}selected{% endif %}>Intermediate</option>
+                        <option value="Advanced" {% if form_data.level == 'Advanced' %}selected{% endif %}>Advanced</option>
+                    </select>
+                </div>
 
-        <div>
-            <label for="level" class="block text-sm font-medium mb-1">Skill Level</label>
-            <select id="level" name="level" required class="w-full rounded-lg border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                <option value="Beginner">Beginner</option>
-                <option value="Intermediate">Intermediate</option>
-                <option value="Advanced">Advanced</option>
-            </select>
-        </div>
+                <button type="submit" class="w-full bg-indigo-600 text-white py-2.5 rounded-lg hover:bg-indigo-700 transition">Generate Curriculum</button>
+            </form>
+        </section>
 
-        <button type="submit" class="w-full bg-indigo-600 text-white py-2.5 rounded-lg hover:bg-indigo-700 transition">Generate Curriculum</button>
-    </form>
-</section>
-{% endblock %}
+        {% if curriculum %}
+            <section class="mt-8 bg-white rounded-2xl shadow-lg p-6 md:p-8">
+                <h2 class="text-2xl font-bold mb-4">Saved Curriculum</h2>
+                <article class="prose max-w-none prose-headings:text-slate-800 prose-li:my-1">
+                    {{ curriculum|safe }}
+                </article>
+            </section>
+        {% endif %}
+    </main>
+</body>
+</html>

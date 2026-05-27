@@ -1,0 +1,4 @@
+django
+groq
+python-dotenv
+gunicorn

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}CurriPath Planner{% endblock %}
+
+{% block content %}
+<section class="bg-white shadow-lg rounded-2xl p-8">
+    <h1 class="text-3xl font-bold mb-2">CurriPath AI Planner</h1>
+    <p class="text-slate-600 mb-6">Generate a professional week-by-week curriculum in seconds.</p>
+
+    <form method="post" action="{% url 'generate_curriculum' %}" class="space-y-5">
+        {% csrf_token %}
+        <div>
+            <label for="topic" class="block text-sm font-medium mb-1">Topic</label>
+            <input id="topic" name="topic" type="text" required class="w-full rounded-lg border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="e.g., Python for Data Science" />
+        </div>
+
+        <div>
+            <label for="timeframe" class="block text-sm font-medium mb-1">Timeframe (weeks)</label>
+            <input id="timeframe" name="timeframe" type="number" min="1" required class="w-full rounded-lg border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="e.g., 8" />
+        </div>
+
+        <div>
+            <label for="level" class="block text-sm font-medium mb-1">Skill Level</label>
+            <select id="level" name="level" required class="w-full rounded-lg border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advanced">Advanced</option>
+            </select>
+        </div>
+
+        <button type="submit" class="w-full bg-indigo-600 text-white py-2.5 rounded-lg hover:bg-indigo-700 transition">Generate Curriculum</button>
+    </form>
+</section>
+{% endblock %}
